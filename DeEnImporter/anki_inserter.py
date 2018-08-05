@@ -1,11 +1,5 @@
-# -*- coding: utf-8 -*-
-# from __future__ import unicode_literals
-
-
 # TODO: process bar
 # TODO: input form
-# TODO: import model
-# TODO: create deck if it doesnt exist
 
 
 class AnkiInserter:
@@ -65,8 +59,8 @@ class AnkiInserter:
                 example_sentences = u"{}<br>{}".\
                     format(example_sentences, s.decode('utf-8'))
 
-        note.fields[0] = german_field
-        note.fields[1] = english_field
+        note.fields[0] = english_field
+        note.fields[1] = german_field
         note.fields[2] = example_sentences
         note.fields[3] = media_field
 
@@ -76,6 +70,6 @@ class AnkiInserter:
 
         self.col.addNote(note)
 
-    def finish(self):
+    def save(self):
         self.col.decks.save(self.deck)
         self.col.save()

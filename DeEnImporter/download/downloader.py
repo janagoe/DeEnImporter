@@ -14,12 +14,13 @@ class Downloader:
     temp_data_directory = "temp_data"
 
     @classmethod
-    def download(cls, vocab):
+    def download(cls, vocabs):
         cls._make_directory()
 
-        cls._download_dict(vocab)
-        cls._download_wiki(vocab)
-        cls._download_glosbe(vocab)
+        for vocab in vocabs:
+            cls._download_dict(vocab)
+            cls._download_wiki(vocab)
+            cls._download_glosbe(vocab)
 
     @classmethod
     def _download_dict(cls, vocab):
