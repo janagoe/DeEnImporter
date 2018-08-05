@@ -1,4 +1,4 @@
-# GermanEnglishAnkiImporter
+# DeEnAnkiImporter
 
 You want to import a list of your new German vocabularies? But you dont want to look up the definitions yourself? Then use AnkiImporter! You dont just get the definitions. But also example sentences, pictures, and audio samples if you want. 
 
