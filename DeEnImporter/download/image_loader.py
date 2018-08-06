@@ -8,7 +8,7 @@ class ImageLoader:
     file_suffix_list = ['jpg', 'gif', 'png', 'tif', 'svg', ]
 
     @classmethod
-    def download_images(cls, vocab, srcs, max_images=5):
+    def download_images(cls, vocab, srcs, max_images):
         image_file_names = []
         for i in range(len(srcs)):
             if i >= max_images:
@@ -16,6 +16,7 @@ class ImageLoader:
             id_str = '%03d' % (i+1)
             file_name = cls._load_image(vocab, id_str, srcs[i])
             image_file_names.append(file_name)
+        return image_file_names
 
     @classmethod
     def _load_image(cls, vocab, id_str, url):

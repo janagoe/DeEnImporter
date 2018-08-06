@@ -14,6 +14,7 @@ class AudioLoader:
             id_str = '%03d' % (i+1)
             file_name = cls._load_audio(vocab, id_str, srcs[i])
             audio_file_names.append(file_name)
+        return audio_file_names
 
     @classmethod
     def _load_audio(cls, vocab, id_str, url):

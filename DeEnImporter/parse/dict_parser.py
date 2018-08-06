@@ -3,19 +3,21 @@ import re
 from DeEnImporter.download.downloader import Downloader
 
 
+# TODO: parse html fehler bei "Pink", giraffe zum beispiel
+
 # parts taken and modified from
 # https://pypi.org/project/dict.cc.py/#description
 
 class DictParser(object):
 
     @classmethod
-    def parse_file(cls, vocab):
+    def parse_file(cls, vocab, number_of_wanted_translations):
         with open(Downloader.dict_file_name(vocab), 'r') as file:
             response_body = file.read()
 
         translation_tuples = cls._parse_response(response_body)
         if translation_tuples is not None:
-            return cls._parse_translation(vocab, translation_tuples)
+            return cls._parse_translation(vocab, translation_tuples, number_of_wanted_translations)
         else:
             print('No translations found for "%s"' % vocab)
 
@@ -69,7 +71,7 @@ class DictParser(object):
         return s
 
     @classmethod
-    def _parse_translation(cls, vocab, translation_tuples, number_of_wanted_translations=5):
+    def _parse_translation(cls, vocab, translation_tuples, number_of_wanted_translations):
         equals_list = []
         different_capitalization_list = []
 

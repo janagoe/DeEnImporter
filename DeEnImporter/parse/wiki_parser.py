@@ -4,10 +4,13 @@ from BeautifulSoup import BeautifulSoup
 from DeEnImporter.download.downloader import Downloader
 
 
+# TODO: fehler mit [..] bei Katze im satz
+
+
 class WikiParser:
 
     @classmethod
-    def parse_file(cls, vocab, number_of_sentences=3):
+    def parse_file(cls, vocab, number_of_sentences):
         with open(Downloader.wiki_file_name(vocab), 'r') as file:
             response_body = file.read()
 

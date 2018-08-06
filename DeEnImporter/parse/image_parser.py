@@ -9,27 +9,26 @@ class ImageParser:
     host_url = "https://glosbe.com"
 
     @classmethod
-    def parse_file(cls, vocab, max_images=5):
+    def parse_file(cls, vocab, max_images):
         with open(Downloader.glosbe_file_name(vocab), 'r') as file:
             response_body = file.read()
 
         soup = BeautifulSoup(response_body)
+        image_srcs = []
 
         try:
             div = soup.find('div', {'id': 'translation-images'})
             imgs = div.findAll('img')
-
-            image_srcs = []
             for img in imgs:
                 html = str(img)
                 src = cls._remove_html(html)
                 image_srcs.append(ImageParser.host_url + src)
-
+        except AttributeError:
+            pass
+        finally:
             image_file_names = ImageLoader.download_images(vocab, image_srcs, max_images)
             return image_file_names
 
-        except AttributeError:
-            pass
 
     @classmethod
     def _remove_html(cls, html):

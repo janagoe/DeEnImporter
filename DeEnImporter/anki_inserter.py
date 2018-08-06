@@ -8,11 +8,13 @@ class AnkiInserter:
         self.col = col
         self.deck = self.col.decks.current()
         self.model = model
+        self._counter = 0
 
     def insert(self, translation, sentences, images, audios):
         if translation:
             media_field = self._insert_media(images, audios)
             self._insert_note(translation, sentences, media_field)
+            self._counter += 1
 
     def _insert_media(self, images, audios):
         media_links = []
@@ -73,3 +75,6 @@ class AnkiInserter:
     def save(self):
         self.col.decks.save(self.deck)
         self.col.save()
+
+    def get_count(self):
+        return self._counter

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+from aqt.utils import showInfo
 
 
 class InputParser:
@@ -9,12 +10,15 @@ class InputParser:
         self.word_count = {}
         self.sorted_words = []
 
-    def read_input(self, tuple):
+    def read_input(self, text):
 
-        for word in tuple:
-            # not working with integers from the text
-            if not isinstance(word, int):
-                self.words.append(str(word.encode('utf-8')))
+        regex = re.compile(r'[^\wäüöß]')
+        # TODO: some problems, eg. with "aß"
+
+        for word in regex.split(text):
+            # TODO: not appending numbers
+            # TODO: no dublicates through using a set
+            self.words.append(str(word.encode('utf-8')))
 
         self._count_words()
         return self.sorted_words
