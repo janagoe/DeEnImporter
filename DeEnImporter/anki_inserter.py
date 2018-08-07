@@ -49,22 +49,26 @@ class AnkiInserter:
         note_model['did'] = self.deck['id']
         note_model['id'] = self.model['id']
 
-        german_field = translation[0].decode('utf-8')
+        german = translation[0].decode('utf-8')
 
-        english_field = ""
+        english = ""
         for t in translation[1]:
-            english_field = "{}<br>{}".format(english_field, t)
+            english = "{}<br>{}".format(english, t)
 
-        example_sentences = u""
-        if sentences:
-            for s in sentences:
-                example_sentences = u"{}<br>{}".\
-                    format(example_sentences, s.decode('utf-8'))
+        # example_sentences = u""
+        # if sentences:
+        #     for s in sentences:
+        #         example_sentences = u"{}<br>{}".\
+        #             format(example_sentences, s.decode('utf-8'))
 
-        note.fields[0] = english_field
-        note.fields[1] = german_field
-        note.fields[2] = example_sentences
-        note.fields[3] = media_field
+        german_examples = ""
+        english_examples = ""
+
+        note.fields[0] = english
+        note.fields[1] = german
+        note.fields[2] = english_examples
+        note.fields[3] = german_examples
+        note.fields[4] = media_field
 
         tags = "de-en-importer"
         note.tags = self.col.tags.canonify(self.col.tags.split(tags))

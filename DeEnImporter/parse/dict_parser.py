@@ -3,7 +3,7 @@ import re
 from DeEnImporter.download.downloader import Downloader
 
 
-# TODO: parse html fehler bei "Pink", giraffe zum beispiel
+# TODO: parse html fehler bei "Pink", giraffe, text zum beispiel
 
 # parts taken and modified from
 # https://pypi.org/project/dict.cc.py/#description

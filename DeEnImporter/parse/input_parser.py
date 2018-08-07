@@ -6,7 +6,7 @@ from aqt.utils import showInfo
 class InputParser:
 
     def __init__(self):
-        self.words = []
+        self.words = set([])
         self.word_count = {}
         self.sorted_words = []
 
@@ -17,8 +17,7 @@ class InputParser:
 
         for word in regex.split(text):
             # TODO: not appending numbers
-            # TODO: no dublicates through using a set
-            self.words.append(str(word.encode('utf-8')))
+            self.words.add(str(word.encode('utf-8')))
 
         self._count_words()
         return self.sorted_words
