@@ -1,5 +1,4 @@
-# TODO: process bar
-# TODO: input form
+from aqt.utils import showInfo
 
 
 class AnkiInserter:
@@ -14,7 +13,6 @@ class AnkiInserter:
         if translation:
             media_field = self._insert_media(images, audios)
             self._insert_note(translation, sentences, media_field)
-            self._counter += 1
 
     def _insert_media(self, images, audios):
         media_links = []
@@ -49,32 +47,35 @@ class AnkiInserter:
         note_model['did'] = self.deck['id']
         note_model['id'] = self.model['id']
 
-        german = translation[0].decode('utf-8')
+        if len(translation[0]) > 0 and len(translation[1]) > 0:
 
-        english = ""
-        for t in translation[1]:
-            english = "{}<br>{}".format(english, t)
+            german = translation[0]
 
-        # example_sentences = u""
-        # if sentences:
-        #     for s in sentences:
-        #         example_sentences = u"{}<br>{}".\
-        #             format(example_sentences, s.decode('utf-8'))
+            english = translation[1][0]
+            for i in range(1, len(translation[1])):
+                english = u"{}<br>{}".format(english, translation[1][i])
 
-        german_examples = ""
-        english_examples = ""
+            german_examples = u""
+            english_examples = u""
+            if sentences and len(sentences) > 0:
+                german_examples = u"{}".format(sentences[0][0])
+                english_examples = u"{}".format(sentences[0][1])
+                for i in range(1, len(sentences)):
+                    german_examples = u"{}<br>{}".format(german_examples, sentences[i][0])
+                    english_examples = u"{}<br>{}".format(english_examples, sentences[i][1])
 
-        note.fields[0] = english
-        note.fields[1] = german
-        note.fields[2] = english_examples
-        note.fields[3] = german_examples
-        note.fields[4] = media_field
+            note.fields[0] = german
+            note.fields[1] = english
+            note.fields[2] = german_examples
+            note.fields[3] = english_examples
+            note.fields[4] = media_field
 
-        tags = "de-en-importer"
-        note.tags = self.col.tags.canonify(self.col.tags.split(tags))
-        note_model['tags'] = note.tags
+            tags = "de-en-importer"
+            note.tags = self.col.tags.canonify(self.col.tags.split(tags))
+            note_model['tags'] = note.tags
 
-        self.col.addNote(note)
+            self.col.addNote(note)
+            self._counter += 1
 
     def save(self):
         self.col.decks.save(self.deck)

@@ -27,13 +27,13 @@ def get_model(col):  # mm = ModelManager
 def create_model(mm):
     m = mm.new(model_name)
 
-    fm = mm.newField("English")
-    mm.addField(m, fm)
     fm = mm.newField("German")
     mm.addField(m, fm)
-    fm = mm.newField("English Examples")
+    fm = mm.newField("English")
     mm.addField(m, fm)
     fm = mm.newField("German Examples")
+    mm.addField(m, fm)
+    fm = mm.newField("English Examples")
     mm.addField(m, fm)
     fm = mm.newField("Media")
     mm.addField(m, fm)

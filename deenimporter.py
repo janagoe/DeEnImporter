@@ -4,15 +4,14 @@ from aqt.qt import *
 
 from DeEnImporter.download.downloader import Downloader
 from DeEnImporter.parse.input_parser import InputParser
-from DeEnImporter.parse.dict_parser import DictParser
 from DeEnImporter.parse.image_parser import ImageParser
-from DeEnImporter.parse.wiki_parser import WikiParser
 from DeEnImporter.parse.audio_parser import AudioParser
 from DeEnImporter.anki_inserter import AnkiInserter
-from DeEnImporter.input_dialog import InputDialog
-from DeEnImporter.progress_bar import ProgressBar
-
+from DeEnImporter.ui.input_dialog import InputDialog
+from DeEnImporter.ui.progress_bar import ProgressBar
 from DeEnImporter.get_model import get_model
+from DeEnImporter.parse.example_parser import ExampleParser
+from DeEnImporter.parse.translation_parser import TranslationParser
 
 
 ##############################################################################
@@ -24,11 +23,13 @@ def run():
 
     text, translations_nr, sentences_nr, images_nr, audios_nr = data
     vocabs = InputParser().read_input(text)
+    showInfo(str(vocabs))
 
     progress_bar = ProgressBar(len(vocabs))
     # progress_bar.run()
 
     Downloader.download(vocabs, progress_bar)
+
 
     # setup anki collection for insertions
     #################################################
@@ -50,11 +51,14 @@ def run():
 
     #################################################
 
+
     # parsing downloads and inserting
+    translation_parser = TranslationParser(translations_nr)
+    example_parser = ExampleParser(sentences_nr)
     inserter = AnkiInserter(mw.col, model)
     for vocab in vocabs:
-        translation = DictParser.parse_file(vocab, translations_nr)
-        sentences = WikiParser.parse_file(vocab, sentences_nr)
+        translation = translation_parser.parse(vocab)
+        sentences = example_parser.parse(vocab)
         images = ImageParser.parse_file(vocab, images_nr)
         audios = AudioParser.parse_file(vocab, audios_nr)
 
@@ -68,9 +72,8 @@ def run():
 
 
 def finish_message(count):
-    if count == 1:
-        showInfo("Successfully created one new card.")
-    elif count > 1:
+    count *= 2
+    if count > 0:
         showInfo("Successfully created %d new cards." % count)
     else:
         showInfo("No cards could be created.")

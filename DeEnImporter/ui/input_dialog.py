@@ -31,7 +31,7 @@ class InputDialog(QDialog):
         self.sentences_spinbox = QSpinBox()
         self.sentences_spinbox.setMinimum(0)
         self.sentences_spinbox.setMaximum(10)
-        self.sentences_spinbox.setValue(3)
+        self.sentences_spinbox.setValue(2)
 
         self.images_label = QLabel("Images: ")
         self.images_spinbox = QSpinBox()
