@@ -12,11 +12,9 @@ class InputParser:
 
     def read_input(self, text):
 
-        regex = re.compile(r'[^\wäüöß]')
-        # TODO: some problems, eg. with "aß"
+        regex = re.compile(ur'[^\wäüöß]', re.UNICODE)
 
         for word in regex.split(text):
-            # TODO: not appending numbers
             self.words.add(str(word.encode('utf-8')))
 
         self._count_words()

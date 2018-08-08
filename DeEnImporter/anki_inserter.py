@@ -74,6 +74,8 @@ class AnkiInserter:
             note.tags = self.col.tags.canonify(self.col.tags.split(tags))
             note_model['tags'] = note.tags
 
+
+
             self.col.addNote(note)
             self._counter += 1
 

@@ -13,7 +13,7 @@ class TranslationParser:
     def parse(self, vocab):
         self.german = ""
         self.english = []
-        v1, v2 = self.vocab_variations(vocab)
+        v1, v2 = self.vocab_variations(vocab.decode('utf-8'))
 
         j1 = self.get_json(v1)
         t1 = self.parse_json(j1)
@@ -25,23 +25,30 @@ class TranslationParser:
             t2 = self.parse_json(j2)
             self.german = v2
             self.english = t2
-
         return self.german, self.english
 
     def get_json(self, vocab):
         template = "https://glosbe.com/gapi_v0_1/translate?from=deu&dest=eng&format=json&phrase={}&pretty=true"
-        url = template.format(vocab)
+        url = template.format(urllib2.quote(vocab.encode('utf-8')))
+        showInfo(url)
         response = urllib2.urlopen(url)
         return json.loads(response.read())
 
     def parse_json(self, json_object):
         tuc = json_object['tuc']
         translations = []
-        for i in range(min(self.translations_nr, len(tuc))):
-            translations.append(tuc[i]['phrase']['text'])
+
+        try:
+            for i in range(min(self.translations_nr, len(tuc))):
+                translations.append(tuc[i]['phrase']['text'])
+        except KeyError:
+            pass
+
         return translations
 
     def vocab_variations(self, vocab):
         lower = vocab.lower()
         big = vocab.upper()[0] + lower[1:]
+        showInfo(lower)
+        showInfo(big)
         return lower, big

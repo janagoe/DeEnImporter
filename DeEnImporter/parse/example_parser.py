@@ -12,7 +12,6 @@ class ExampleParser:
         examples = self.parse_json(json_object)
         return self.choose_examples(examples)
 
-    # first german, second english
     def parse_json(self, json_object):
         ex = json_object['examples']
         examples = []
@@ -30,6 +29,6 @@ class ExampleParser:
 
     def get_json(self, vocab):
         template = "https://glosbe.com/gapi_v0_1/tm?from=deu&dest=eng&format=json&phrase={}&pretty=true"
-        url = template.format(vocab)
+        url = template.format(urllib2.quote(vocab))
         response = urllib2.urlopen(url)
         return json.loads(response.read())
