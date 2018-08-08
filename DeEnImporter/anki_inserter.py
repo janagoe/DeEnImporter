@@ -40,8 +40,6 @@ class AnkiInserter:
             return '[sound:%s]' % file_name
 
     def _insert_note(self, translation, sentences, media_field=""):
-        # TODO: not inserting dublicates
-
         note = self.col.newNote()
         note_model = note.model()
         note_model['did'] = self.deck['id']
@@ -51,33 +49,33 @@ class AnkiInserter:
 
             german = translation[0]
 
-            english = translation[1][0]
-            for i in range(1, len(translation[1])):
-                english = u"{}<br>{}".format(english, translation[1][i])
+            if self.is_no_dublicate(german):
 
-            german_examples = u""
-            english_examples = u""
-            if sentences and len(sentences) > 0:
-                german_examples = u"{}".format(sentences[0][0])
-                english_examples = u"{}".format(sentences[0][1])
-                for i in range(1, len(sentences)):
-                    german_examples = u"{}<br>{}".format(german_examples, sentences[i][0])
-                    english_examples = u"{}<br>{}".format(english_examples, sentences[i][1])
+                english = translation[1][0]
+                for i in range(1, len(translation[1])):
+                    english = u"{}<br>{}".format(english, translation[1][i])
 
-            note.fields[0] = german
-            note.fields[1] = english
-            note.fields[2] = german_examples
-            note.fields[3] = english_examples
-            note.fields[4] = media_field
+                german_examples = u""
+                english_examples = u""
+                if sentences and len(sentences) > 0:
+                    german_examples = u"{}".format(sentences[0][0])
+                    english_examples = u"{}".format(sentences[0][1])
+                    for i in range(1, len(sentences)):
+                        german_examples = u"{}<br>{}".format(german_examples, sentences[i][0])
+                        english_examples = u"{}<br>{}".format(english_examples, sentences[i][1])
 
-            tags = "de-en-importer"
-            note.tags = self.col.tags.canonify(self.col.tags.split(tags))
-            note_model['tags'] = note.tags
+                note.fields[0] = german
+                note.fields[1] = english
+                note.fields[2] = german_examples
+                note.fields[3] = english_examples
+                note.fields[4] = media_field
 
+                tags = "de-en-importer"
+                note.tags = self.col.tags.canonify(self.col.tags.split(tags))
+                note_model['tags'] = note.tags
 
-
-            self.col.addNote(note)
-            self._counter += 1
+                self.col.addNote(note)
+                self._counter += 1
 
     def save(self):
         self.col.decks.save(self.deck)
@@ -85,3 +83,7 @@ class AnkiInserter:
 
     def get_count(self):
         return self._counter
+
+    def is_no_dublicate(self, front):
+        cards = self.col.findCards(u"German:{}".format(front))
+        return len(cards) < 1

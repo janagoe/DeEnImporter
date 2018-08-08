@@ -30,7 +30,6 @@ class TranslationParser:
     def get_json(self, vocab):
         template = "https://glosbe.com/gapi_v0_1/translate?from=deu&dest=eng&format=json&phrase={}&pretty=true"
         url = template.format(urllib2.quote(vocab.encode('utf-8')))
-        showInfo(url)
         response = urllib2.urlopen(url)
         return json.loads(response.read())
 
@@ -49,6 +48,4 @@ class TranslationParser:
     def vocab_variations(self, vocab):
         lower = vocab.lower()
         big = vocab.upper()[0] + lower[1:]
-        showInfo(lower)
-        showInfo(big)
         return lower, big

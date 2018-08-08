@@ -3,3 +3,4 @@ venv/
 .gitignore
 test_addon.py
 en-de.txt
+DeEnImporter/parse/__pycache__/

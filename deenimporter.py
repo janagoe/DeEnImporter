@@ -23,7 +23,6 @@ def run():
 
     text, translations_nr, sentences_nr, images_nr, audios_nr = data
     vocabs = InputParser().read_input(text)
-    showInfo(str(vocabs))
 
     progress_bar = ProgressBar(len(vocabs))
     # progress_bar.run()

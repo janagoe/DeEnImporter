@@ -3,6 +3,7 @@ import subprocess
 import os
 import errno
 import shutil
+from urllib2 import quote
 
 
 class Downloader:
@@ -28,8 +29,7 @@ class Downloader:
     @classmethod
     def _format_url(cls, template, vocab):
         v = vocab.replace(' ', '_')
-        # TODO: format properly
-        # v = urllib.parse.quote(v.encode("utf-8"))
+        v = quote(v)
         return template.format(v)
 
     @classmethod
