@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from BeautifulSoup import BeautifulSoup
-from DeEnImporter.download.downloader import Downloader
 from DeEnImporter.download.image_loader import ImageLoader
 
 
@@ -9,11 +8,8 @@ class ImageParser:
     host_url = "https://glosbe.com"
 
     @classmethod
-    def parse_file(cls, vocab, max_images):
-        with open(Downloader.glosbe_file_name(vocab), 'r') as file:
-            response_body = file.read()
-
-        soup = BeautifulSoup(response_body)
+    def parse_html(cls, html, vocab, max_images):
+        soup = BeautifulSoup(html)
         image_srcs = []
 
         try:

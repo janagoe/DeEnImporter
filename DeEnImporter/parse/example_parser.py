@@ -1,6 +1,5 @@
 import json
 import urllib2
-from aqt.utils import showInfo
 
 
 class ExampleParser:

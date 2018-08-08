@@ -1,5 +1,3 @@
-from aqt.utils import showInfo
-
 
 class AnkiInserter:
 
@@ -29,7 +27,7 @@ class AnkiInserter:
                 link = self._path_to_link(file_name)
                 media_links.append(link)
 
-        return "<br/>".join(media_links)
+        return " ".join(media_links)
 
     @classmethod
     def _path_to_link(cls, file_name):

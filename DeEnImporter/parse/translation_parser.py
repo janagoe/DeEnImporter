@@ -1,6 +1,5 @@
 import json
 import urllib2
-from aqt.utils import showInfo
 
 
 class TranslationParser:
@@ -27,6 +26,7 @@ class TranslationParser:
             self.english = t2
         return self.german, self.english
 
+    @classmethod
     def get_json(self, vocab):
         template = "https://glosbe.com/gapi_v0_1/translate?from=deu&dest=eng&format=json&phrase={}&pretty=true"
         url = template.format(urllib2.quote(vocab.encode('utf-8')))
@@ -45,7 +45,11 @@ class TranslationParser:
 
         return translations
 
-    def vocab_variations(self, vocab):
-        lower = vocab.lower()
-        big = vocab.upper()[0] + lower[1:]
-        return lower, big
+    @classmethod
+    def vocab_variations(cls, vocab):
+        if len(vocab) > 1:
+            lower = vocab.lower()
+            big = vocab.upper()[0] + lower[1:]
+            return big, lower
+        else:
+            return vocab.upper(), vocab.lower()

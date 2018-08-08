@@ -61,14 +61,15 @@ def create_templates(mm):
 
     t2['qfmt'] = """
         <p id="german">{{German}}</p>
+        <p id="example">{{German Examples}}</p>
+        {{Media}}
         """
 
     t2['afmt'] = """
         {{FrontSide}}
         <hr id=answer>
         <p id="german">{{English}}</p>
-        <p id="example">{{German Examples}}</p>
-        {{Media}}
+        <p id="example">{{English Examples}}</p>
         """
 
     return t1, t2

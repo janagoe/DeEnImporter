@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from BeautifulSoup import BeautifulSoup
-from DeEnImporter.download.downloader import Downloader
 from DeEnImporter.download.audio_loader import AudioLoader
 
 
@@ -9,11 +8,9 @@ class AudioParser:
     host_url = "https://glosbe.com"
 
     @classmethod
-    def parse_file(cls, vocab, max_audios=5):
-        with open(Downloader.glosbe_file_name(vocab), 'r') as file:
-            response_body = file.read()
+    def parse_html(cls, html, vocab, max_audios):
 
-        soup = BeautifulSoup(response_body)
+        soup = BeautifulSoup(html)
 
         h3 = soup.findAll('h3')
         audio_srcs = []

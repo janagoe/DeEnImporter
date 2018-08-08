@@ -2,7 +2,6 @@ from aqt import mw
 from aqt.utils import showInfo
 from aqt.qt import *
 
-from DeEnImporter.download.downloader import Downloader
 from DeEnImporter.parse.input_parser import InputParser
 from DeEnImporter.parse.image_parser import ImageParser
 from DeEnImporter.parse.audio_parser import AudioParser
@@ -12,6 +11,7 @@ from DeEnImporter.ui.progress_bar import ProgressBar
 from DeEnImporter.get_model import get_model
 from DeEnImporter.parse.example_parser import ExampleParser
 from DeEnImporter.parse.translation_parser import TranslationParser
+from DeEnImporter.download.media_loader import MediaLoader
 
 
 ##############################################################################
@@ -26,8 +26,6 @@ def run():
 
     progress_bar = ProgressBar(len(vocabs))
     # progress_bar.run()
-
-    Downloader.download(vocabs, progress_bar)
 
 
     # setup anki collection for insertions
@@ -50,23 +48,23 @@ def run():
 
     #################################################
 
-
     # parsing downloads and inserting
     translation_parser = TranslationParser(translations_nr)
     example_parser = ExampleParser(sentences_nr)
+    media_loader = MediaLoader(images_nr, audios_nr)
     inserter = AnkiInserter(mw.col, model)
+
     for vocab in vocabs:
         translation = translation_parser.parse(vocab)
         sentences = example_parser.parse(vocab)
-        images = ImageParser.parse_file(vocab, images_nr)
-        audios = AudioParser.parse_file(vocab, audios_nr)
+
+        images, audios = media_loader.load(vocab)
 
         inserter.insert(translation, sentences, images, audios)
         progress_bar.finished_action()
 
     # saving and clearing everything up
     inserter.save()
-    Downloader.clear_temp_data()
     finish_message(inserter.get_count())
 
 

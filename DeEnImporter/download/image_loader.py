@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import urllib
-from DeEnImporter.download.downloader import Downloader
+from DeEnImporter.download.media_handler import MediaHandler
 
 
 class ImageLoader:
@@ -23,7 +23,7 @@ class ImageLoader:
         original_file_name = url.split('/')[-1]
         file_suffix = original_file_name.split('.')[-1]
         if file_suffix in ImageLoader.file_suffix_list:
-            file_name = "{0}_{1}.{2}".format(Downloader.image_file_name(vocab), id_str, file_suffix)
+            file_name = "{0}_{1}.{2}".format(MediaHandler.image_file_name(vocab), id_str, file_suffix)
             with open(file_name, 'wb') as file:
                 file.write(urllib.urlopen(url).read())
             return file_name

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import re
-from aqt.utils import showInfo
 
 
 class InputParser:
