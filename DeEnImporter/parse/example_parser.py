@@ -3,7 +3,9 @@ import urllib2
 
 
 class ExampleParser:
-    def __init__(self, sentences_nr):
+    def __init__(self, from_lang, dest_lang, sentences_nr):
+        self.from_lang = from_lang
+        self.dest_lang = dest_lang
         self.sentences_nr = sentences_nr
 
     def parse(self, vocab):
@@ -16,9 +18,9 @@ class ExampleParser:
         examples = []
         # parsing more than necessary to a greater variety to choose from
         for i in range(min(self.sentences_nr*2, len(ex))):
-            de = ex[i]['first']
-            en = ex[i]['second']
-            examples.append([de, en])
+            from_text = ex[i]['first']
+            dest_text = ex[i]['second']
+            examples.append([from_text, dest_text])
         return examples
 
     def choose_examples(self, examples):
@@ -27,7 +29,7 @@ class ExampleParser:
         return examples[:self.sentences_nr]
 
     def get_json(self, vocab):
-        template = "https://glosbe.com/gapi_v0_1/tm?from=deu&dest=eng&format=json&phrase={}&pretty=true"
-        url = template.format(urllib2.quote(vocab))
+        template = u"https://glosbe.com/gapi_v0_1/tm?from={}&dest={}&format=json&phrase={}&pretty=true"
+        url = template.format(self.from_lang, self.dest_lang, urllib2.quote(vocab))
         response = urllib2.urlopen(url)
         return json.loads(response.read())

@@ -3,8 +3,6 @@ from aqt.utils import showInfo
 from aqt.qt import *
 
 from DeEnImporter.parse.input_parser import InputParser
-from DeEnImporter.parse.image_parser import ImageParser
-from DeEnImporter.parse.audio_parser import AudioParser
 from DeEnImporter.anki_inserter import AnkiInserter
 from DeEnImporter.ui.input_dialog import InputDialog
 from DeEnImporter.ui.progress_bar import ProgressBar
@@ -21,17 +19,18 @@ def run():
     if not data:
         return
 
-    text, translations_nr, sentences_nr, images_nr, audios_nr = data
+    text, translations_nr, sentences_nr, images_nr, audios_nr,\
+        from_lang, dest_lang, from_audio_wanted, dest_audio_wanted = data
+
     vocabs = InputParser().read_input(text)
 
     progress_bar = ProgressBar(len(vocabs))
     # progress_bar.run()
 
-
     # setup anki collection for insertions
     #################################################
 
-    deck_name = "DeEnImporter"
+    deck_name = "VocabImporter"
 
     # select deck
     deck_id = mw.col.decks.id(deck_name, create=True)
@@ -49,18 +48,19 @@ def run():
     #################################################
 
     # parsing downloads and inserting
-    translation_parser = TranslationParser(translations_nr)
-    example_parser = ExampleParser(sentences_nr)
-    media_loader = MediaLoader(images_nr, audios_nr)
-    inserter = AnkiInserter(mw.col, model)
+    translation_parser = TranslationParser(from_lang, dest_lang, translations_nr)
+    example_parser = ExampleParser(from_lang, dest_lang, sentences_nr)
+    media_loader = MediaLoader(from_lang, dest_lang, from_audio_wanted, dest_audio_wanted, images_nr, audios_nr)
+    inserter = AnkiInserter(mw.col, model, from_lang, dest_lang)
 
     for vocab in vocabs:
         translation = translation_parser.parse(vocab)
-        sentences = example_parser.parse(vocab)
+        if translation:
+            sentences = example_parser.parse(vocab)
+            images, audios = media_loader.load(vocab)
 
-        images, audios = media_loader.load(vocab)
+            inserter.insert(translation, sentences, images, audios)
 
-        inserter.insert(translation, sentences, images, audios)
         progress_bar.finished_action()
 
     # saving and clearing everything up

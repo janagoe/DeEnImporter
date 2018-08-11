@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from BeautifulSoup import BeautifulSoup
 from DeEnImporter.download.audio_loader import AudioLoader
+from aqt.utils import showInfo
+
 
 
 class AudioParser:
@@ -8,28 +10,52 @@ class AudioParser:
     host_url = "https://glosbe.com"
 
     @classmethod
-    def parse_html(cls, html, vocab, max_audios):
-
+    def parse_html(cls, html, vocab, from_audio, dest_audio, max_audios):
         soup = BeautifulSoup(html)
 
-        h3 = soup.findAll('h3')
-        audio_srcs = []
+        from_srcs = cls._from_audio_srcs(soup)
+        dest_srcs = cls._dest_audio_srcs(soup)
 
-        for h in h3:
+        from_file_names, dest_file_names = AudioLoader.download_audios(vocab, from_srcs, dest_srcs, max_audios)
+        return from_file_names, dest_file_names
+
+    @classmethod
+    def _from_audio_srcs(cls, soup):
+
+        h3s = soup.findAll('h3')
+        for h3 in h3s:
             try:
-                audio_player_containers = h.findAll('span', {'class': 'audioPlayer-container'})
-                for container in audio_player_containers:
-
-                    audio_player = container.find('span', {'class': 'audioPlayer'})
-                    html = str(audio_player)
-
-                    url = "{0}/{1}".format(AudioParser.host_url, cls._remove_html(html))
-                    audio_srcs.append(url)
+                containers = h3.findAll('span', {'class': 'audioPlayer-container'})
+                return cls._parse_containers(containers)
             except AttributeError:
                 pass
 
-        audio_file_names = AudioLoader.download_audios(vocab, audio_srcs, max_audios)
-        return audio_file_names
+    @classmethod
+    def _dest_audio_srcs(cls, soup):
+
+        uls = soup.findAll('ul')
+
+        for ul in uls:
+            try:
+                li = ul.find('li', {'class': 'phraseMeaning show-user-name-listener'})
+                div = li.find('div', {'class': 'text-info'})
+                containers = div.findAll('span', {'class': 'audioPlayer-container'})
+                return cls._parse_containers(containers)
+            except AttributeError:
+                pass
+
+    @classmethod
+    def _parse_containers(cls, containers):
+        srcs = []
+
+        for container in containers:
+            audio_player = container.find('span', {'class': 'audioPlayer'})
+            html = str(audio_player)
+
+            url = "{}/{}".format(AudioParser.host_url, cls._remove_html(html))
+            srcs.append(url)
+
+        return srcs
 
     @classmethod
     def _remove_html(cls, html):

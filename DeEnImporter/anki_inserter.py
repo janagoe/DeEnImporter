@@ -1,74 +1,91 @@
+from aqt.utils import showInfo
+
 
 class AnkiInserter:
 
-    def __init__(self, col, model):
+    def __init__(self, col, model, from_lang, dest_lang):
         self.col = col
         self.deck = self.col.decks.current()
         self.model = model
+        self.from_lang = from_lang
+        self.dest_lang = dest_lang
         self._counter = 0
 
     def insert(self, translation, sentences, images, audios):
         if translation:
-            media_field = self._insert_media(images, audios)
-            self._insert_note(translation, sentences, media_field)
+            images_field, from_audio_field, dest_audio_field = self._insert_media(images, audios)
+            self._insert_note(translation, sentences, images_field, from_audio_field, dest_audio_field)
 
     def _insert_media(self, images, audios):
-        media_links = []
+        image_links = []
+        from_audio_links = []
+        dest_audio_links = []
 
-        srcs = []
         if images:
-            srcs += images
+            for image in images:
+                link = self._path_to_link(image)
+                image_links.append(link)
+
         if audios:
-            srcs += audios
+            for from_audio in audios[0]:
+                link = self._path_to_link(from_audio)
+                from_audio_links.append(link)
 
-        for path in srcs:
-            if path:
-                file_name = self.col.media.addFile(unicode(path, 'utf-8'))
-                link = self._path_to_link(file_name)
-                media_links.append(link)
+            for dest_audio in audios[1]:
+                link = self._path_to_link(dest_audio)
+                dest_audio_links.append(link)
 
-        return " ".join(media_links)
+        image_field = " ".join(image_links)
+        from_audio_field = " ".join(from_audio_links)
+        dest_audio_field = " ".join(dest_audio_links)
 
-    @classmethod
-    def _path_to_link(cls, file_name):
+        return image_field, from_audio_field, dest_audio_field
+
+    def _path_to_link(self, path):
+        file_name = self.col.media.addFile(unicode(path, 'utf-8'))
+
         ext = file_name.split(".")[-1].lower()
         if ext == "jpg":
             return '<img src="%s">' % file_name
         else:
             return '[sound:%s]' % file_name
 
-    def _insert_note(self, translation, sentences, media_field=""):
+    def _insert_note(self, translation, sentences, images_field, from_audio_field, dest_audio_field):
         note = self.col.newNote()
         note_model = note.model()
         note_model['did'] = self.deck['id']
         note_model['id'] = self.model['id']
 
+        # showInfo(str(translation))
+
         if len(translation[0]) > 0 and len(translation[1]) > 0:
 
-            german = translation[0]
+            from_text = translation[0]
 
-            if self.is_no_dublicate(german):
+            if True: #self.is_no_dublicate(from_text):
 
-                english = translation[1][0]
+                dest_text = translation[1][0]
                 for i in range(1, len(translation[1])):
-                    english = u"{}<br>{}".format(english, translation[1][i])
+                    dest_text = u"{}<br>{}".format(dest_text, translation[1][i])
 
-                german_examples = u""
-                english_examples = u""
+                from_examples = u""
+                dest_examples = u""
                 if sentences and len(sentences) > 0:
-                    german_examples = u"{}".format(sentences[0][0])
-                    english_examples = u"{}".format(sentences[0][1])
+                    from_examples = u"{}".format(sentences[0][0])
+                    dest_examples = u"{}".format(sentences[0][1])
                     for i in range(1, len(sentences)):
-                        german_examples = u"{}<br>{}".format(german_examples, sentences[i][0])
-                        english_examples = u"{}<br>{}".format(english_examples, sentences[i][1])
+                        from_examples = u"{}<br>{}".format(from_examples, sentences[i][0])
+                        dest_examples = u"{}<br>{}".format(dest_examples, sentences[i][1])
 
-                note.fields[0] = german
-                note.fields[1] = english
-                note.fields[2] = german_examples
-                note.fields[3] = english_examples
-                note.fields[4] = media_field
+                note.fields[0] = from_text
+                note.fields[1] = dest_text
+                note.fields[2] = from_examples
+                note.fields[3] = dest_examples
+                note.fields[4] = from_audio_field
+                note.fields[5] = dest_audio_field
+                note.fields[6] = images_field
 
-                tags = "de-en-importer"
+                tags = u"{}-{}-import".format(self.from_lang, self.dest_lang)
                 note.tags = self.col.tags.canonify(self.col.tags.split(tags))
                 note_model['tags'] = note.tags
 

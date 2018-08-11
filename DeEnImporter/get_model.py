@@ -1,5 +1,5 @@
 
-model_name = "Reversed-Importer"
+model_name = "Vocab-Importer-Reversed"
 
 
 def get_model(col):  # mm = ModelManager
@@ -27,15 +27,19 @@ def get_model(col):  # mm = ModelManager
 def create_model(mm):
     m = mm.new(model_name)
 
-    fm = mm.newField("German")
+    fm = mm.newField("FromLang")
     mm.addField(m, fm)
-    fm = mm.newField("English")
+    fm = mm.newField("DestLang")
     mm.addField(m, fm)
-    fm = mm.newField("German Examples")
+    fm = mm.newField("FromLang Examples")
     mm.addField(m, fm)
-    fm = mm.newField("English Examples")
+    fm = mm.newField("DestLang Examples")
     mm.addField(m, fm)
-    fm = mm.newField("Media")
+    fm = mm.newField("FromAudio")
+    mm.addField(m, fm)
+    fm = mm.newField("DestAudio")
+    mm.addField(m, fm)
+    fm = mm.newField("Images")
     mm.addField(m, fm)
 
     return m
@@ -45,31 +49,35 @@ def create_templates(mm):
     t1 = mm.newTemplate("Card 1")
 
     t1['qfmt'] = """
-        <p id="english">{{English}}</p>
-        <p id="example">{{English Examples}}</p>
+        <p id="destlang">{{DestLang}}</p>
+        <p id="example">{{DestLang Examples}}</p>
+        <p>{{DestAudio}}</p>
         """
 
     t1['afmt'] = """
         {{FrontSide}}
         <hr id=answer>
-        <p id="german">{{German}}</p>
-        <p id="example">{{German Examples}}</p>
-        {{Media}}
+        <p id="fromlang">{{FromLang}}</p>
+        <p id="example">{{FromLang Examples}}</p>
+        <p>{{FromAudio}}</p>
+        {{Images}}
         """
 
     t2 = mm.newTemplate("Card 2")
 
     t2['qfmt'] = """
-        <p id="german">{{German}}</p>
-        <p id="example">{{German Examples}}</p>
-        {{Media}}
+        <p id="fromlang">{{FromLang}}</p>
+        <p id="example">{{FromLang Examples}}</p>
+        <p>{{FromAudio}}</p>
+        {{Images}}
         """
 
     t2['afmt'] = """
         {{FrontSide}}
         <hr id=answer>
-        <p id="german">{{English}}</p>
-        <p id="example">{{English Examples}}</p>
+        <p id="destlang">{{DestLang}}</p>
+        <p id="example">{{DestLang Examples}}</p>
+        <p>{{DestAudio}}</p>
         """
 
     return t1, t2
