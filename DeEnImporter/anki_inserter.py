@@ -1,23 +1,41 @@
-from aqt.utils import showInfo
 
 
 class AnkiInserter:
 
-    def __init__(self, col, model, from_lang, dest_lang, image_side):
+    def __init__(self, col, model, from_lang_code, dest_lang_code, image_side):
         self.col = col
         self.deck = self.col.decks.current()
         self.model = model
-        self.from_lang = from_lang
-        self.dest_lang = dest_lang
-        self.image_side = image_side
+        self.from_lang_code = from_lang_code
+        self.dest_lang_code = dest_lang_code
+        self.image_side = image_side  # "from" or "dest"
         self._counter = 0
 
     def insert(self, translation, sentences, images, audios):
+        """
+        Inserts the content into an Anki node
+        :param translation: translation[0] contains the word from the input in the from language,
+         translation[1] contains an array of possible translations in the destination language
+        :param sentences: array with arrays of one example sentence in the from language and the fitting
+        translated sentence in the destination language
+        :param images: array with paths of the images
+        :param audios: two arrays with the paths from the audio files, audios[0] for the from language and
+        audios[1] for the destination language
+        """
+
         if translation:
             images_field, from_audio_field, dest_audio_field = self._insert_media(images, audios)
             self._insert_note(translation, sentences, images_field, from_audio_field, dest_audio_field)
 
     def _insert_media(self, images, audios):
+        """
+        Creating links from the file paths, which Anki uses to display the images and to play
+        the audios
+        :param images: paths of the images
+        :param audios: paths of the audios, audios[0] for the from language and audios[1] for the destination language
+        :return: strings which will get inserted into the node
+        """
+
         image_links = []
         from_audio_links = []
         dest_audio_links = []
@@ -46,6 +64,11 @@ class AnkiInserter:
         return image_field, from_audio_field, dest_audio_field
 
     def _path_to_link(self, path):
+        """
+        Creating a string which Anki uses to display the image / play the audio
+        :param path: absolute file path, where the media files are
+        :return: link for Anki
+        """
         file_name = self.col.media.addFile(unicode(path, 'utf-8'))
         ext = file_name.split(".")[-1].lower()
         if ext == "jpg":
@@ -54,12 +77,24 @@ class AnkiInserter:
             return '[sound:%s]' % file_name
 
     def _insert_note(self, translation, sentences, images_field, from_audio_field, dest_audio_field):
-        note = self.col.newNote()
-        note_model = note.model()
-        note_model['did'] = self.deck['id']
-        note_model['id'] = self.model['id']
+        """
+        Inserting the node with the content into the Anki database, but no dublicates.
+        :param translation: translation[0] contains the word from the input in the from language,
+         translation[1] contains an array of possible translations in the destination language
+        :param sentences: array with arrays of one example sentence in the from language and the fitting
+        translated sentence in the destination language
+        :param images_field: links for Anki with all images
+        :param from_audio_field: links for Anki with the audios in the from language, if the user wants these
+        :param dest_audio_field: links for Anki with the audios in the destination language, if the user wants these
+        """
 
         if len(translation[0]) > 0 and len(translation[1]) > 0:
+
+            note = self.col.newNote()
+            note_model = note.model()
+            note_model['did'] = self.deck['id']
+            note_model['id'] = self.model['id']
+
             from_text = translation[0]
             if self.is_no_dublicate(from_text):
 
@@ -88,7 +123,7 @@ class AnkiInserter:
                 else:
                     note.fields[7] = images_field
 
-                tags = u"{}-{}-import".format(self.from_lang, self.dest_lang)
+                tags = u"{}-{}-import".format(self.from_lang_code, self.dest_lang_code)
                 note.tags = self.col.tags.canonify(self.col.tags.split(tags))
                 note_model['tags'] = note.tags
 
@@ -103,5 +138,10 @@ class AnkiInserter:
         return self._counter
 
     def is_no_dublicate(self, front):
-        cards = self.col.findCards(u"German:{}".format(front))
+        """
+        Checking in the Anki database, if a card with the same front already exists.
+        :param front: the content on the front of the card
+        :return: True if the card is no dublicate, False if the card is a dublicate.
+        """
+        cards = self.col.findCards(u"FromLanguage:{}".format(front))
         return len(cards) < 1

@@ -9,6 +9,13 @@ class ImageParser:
 
     @classmethod
     def parse_html(cls, html, vocab, max_images):
+        """
+        Searching in the html data for the image sources, and letting the ImageLoader load the images.
+        :param html: the html data
+        :param vocab: the word from the input in the from language
+        :param max_images: the maximal number of images the user wants
+        :return: paths of the images
+        """
         soup = BeautifulSoup(html)
         image_srcs = []
 

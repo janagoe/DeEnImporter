@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from BeautifulSoup import BeautifulSoup
 from DeEnImporter.download.audio_loader import AudioLoader
-from aqt.utils import showInfo
-
 
 
 class AudioParser:
@@ -11,6 +9,16 @@ class AudioParser:
 
     @classmethod
     def parse_html(cls, html, vocab, from_audio_wanted, dest_audio_wanted, max_audios):
+        """
+        Searching in the html data for the audio sources in the from and destination language,
+        and letting the AudioLoader load the audios
+        :param html: the html data
+        :param vocab: the word from the input in the from language
+        :param from_audio_wanted: boolean if the user wants to have audios in the from language
+        :param dest_audio_wanted: boolean if the user wants to have audios in the destination language
+        :param max_audios: the maximal number of audios the user wants to have for each language
+        :return: paths for the files in the from and destination language
+        """
         soup = BeautifulSoup(html)
         from_srcs, dest_srcs = [], []
 
@@ -24,7 +32,6 @@ class AudioParser:
 
     @classmethod
     def _from_audio_srcs(cls, soup):
-
         h3s = soup.findAll('h3')
         for h3 in h3s:
             try:
@@ -35,9 +42,7 @@ class AudioParser:
 
     @classmethod
     def _dest_audio_srcs(cls, soup):
-
         uls = soup.findAll('ul')
-
         for ul in uls:
             try:
                 li = ul.find('li', {'class': 'phraseMeaning show-user-name-listener'})
@@ -50,14 +55,12 @@ class AudioParser:
     @classmethod
     def _parse_containers(cls, containers):
         srcs = []
-
         for container in containers:
             audio_player = container.find('span', {'class': 'audioPlayer'})
             html = str(audio_player)
 
             url = "{}/{}".format(AudioParser.host_url, cls._remove_html(html))
             srcs.append(url)
-
         return srcs
 
     @classmethod

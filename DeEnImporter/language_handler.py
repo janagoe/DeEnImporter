@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
+
 class LanguageHandler:
 
+    # 0: ISO 639-3 code which glosbe.com uses
+    # 1: english name of the language
+    # 2: native name of the language
     langs = [
         [u"eng", u"english", u"english"],
         [u"deu", u"german", u"deutsch"],
@@ -19,6 +23,11 @@ class LanguageHandler:
 
     @classmethod
     def langs_to_dict(cls):
+        """
+        Creates a dictionary from LanguageHandler.langs.
+        :return: dictionary. The key is the name to display, like "german | deutsch"
+        and the value is the language code.
+        """
         langs_dict = {}
         for lang in cls.langs:
             key = u"{} | {}".format(lang[1], lang[2])

@@ -1,5 +1,4 @@
 from aqt.qt import *
-from aqt.utils import showInfo
 from DeEnImporter.language_handler import LanguageHandler
 
 class InputDialog(QDialog):
@@ -10,7 +9,7 @@ class InputDialog(QDialog):
         self._set_layout()
 
     def _init_ui(self):
-        self.setGeometry(20, 20, 540, 540)
+        self.setGeometry(20, 20, 540, 640)
 
         self._init_input()
         self._init_lang_preferences()

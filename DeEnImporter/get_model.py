@@ -2,7 +2,12 @@
 model_name = "Vocab-Importer-Reversed"
 
 
-def get_model(col):  # mm = ModelManager
+def get_model(col):  # 'mm' means ModelManager
+    """
+    Searching for the model to use and creating it, if it doesn't exist yet.
+    :param col: Anki collection
+    :return: the model to use
+    """
     mm = col.models
 
     m = mm.byName(model_name)
@@ -49,14 +54,12 @@ def create_model(mm):
 
 def create_templates(mm):
     t1 = mm.newTemplate("Card 1")
-
     t1['qfmt'] = """
         <p id="destlang">{{DestLang}}</p>
         <p id="example">{{DestLang Examples}}</p>
         {{DestImages}}
         {{DestAudio}}
         """
-
     t1['afmt'] = """
         {{FrontSide}}
         <hr id=answer>
@@ -67,14 +70,12 @@ def create_templates(mm):
         """
 
     t2 = mm.newTemplate("Card 2")
-
     t2['qfmt'] = """
         <p id="fromlang">{{FromLang}}</p>
         <p id="example">{{FromLang Examples}}</p>
         {{FromImages}}
         {{FromAudio}}
         """
-
     t2['afmt'] = """
         {{FrontSide}}
         <hr id=answer>
@@ -83,12 +84,10 @@ def create_templates(mm):
         {{DestImages}}
         {{DestAudio}}
         """
-
     return t1, t2
 
 
 def set_css(m):
-
     m['css'] = """.card {
      font-family: arial;
      font-size: 20px;
