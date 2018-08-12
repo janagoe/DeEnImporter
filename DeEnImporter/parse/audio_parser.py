@@ -10,11 +10,14 @@ class AudioParser:
     host_url = "https://glosbe.com"
 
     @classmethod
-    def parse_html(cls, html, vocab, from_audio, dest_audio, max_audios):
+    def parse_html(cls, html, vocab, from_audio_wanted, dest_audio_wanted, max_audios):
         soup = BeautifulSoup(html)
+        from_srcs, dest_srcs = [], []
 
-        from_srcs = cls._from_audio_srcs(soup)
-        dest_srcs = cls._dest_audio_srcs(soup)
+        if from_audio_wanted:
+            from_srcs = cls._from_audio_srcs(soup)
+        if dest_audio_wanted:
+            dest_srcs = cls._dest_audio_srcs(soup)
 
         from_file_names, dest_file_names = AudioLoader.download_audios(vocab, from_srcs, dest_srcs, max_audios)
         return from_file_names, dest_file_names

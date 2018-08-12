@@ -20,7 +20,7 @@ def run():
         return
 
     text, translations_nr, sentences_nr, images_nr, audios_nr,\
-        from_lang, dest_lang, from_audio_wanted, dest_audio_wanted = data
+        from_lang, dest_lang, from_audio_wanted, dest_audio_wanted, image_side = data
 
     vocabs = InputParser().read_input(text)
 
@@ -51,7 +51,7 @@ def run():
     translation_parser = TranslationParser(from_lang, dest_lang, translations_nr)
     example_parser = ExampleParser(from_lang, dest_lang, sentences_nr)
     media_loader = MediaLoader(from_lang, dest_lang, from_audio_wanted, dest_audio_wanted, images_nr, audios_nr)
-    inserter = AnkiInserter(mw.col, model, from_lang, dest_lang)
+    inserter = AnkiInserter(mw.col, model, from_lang, dest_lang, image_side)
 
     for vocab in vocabs:
         translation = translation_parser.parse(vocab)

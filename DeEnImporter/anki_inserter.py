@@ -3,12 +3,13 @@ from aqt.utils import showInfo
 
 class AnkiInserter:
 
-    def __init__(self, col, model, from_lang, dest_lang):
+    def __init__(self, col, model, from_lang, dest_lang, image_side):
         self.col = col
         self.deck = self.col.decks.current()
         self.model = model
         self.from_lang = from_lang
         self.dest_lang = dest_lang
+        self.image_side = image_side
         self._counter = 0
 
     def insert(self, translation, sentences, images, audios):
@@ -23,17 +24,20 @@ class AnkiInserter:
 
         if images:
             for image in images:
-                link = self._path_to_link(image)
-                image_links.append(link)
+                if image:
+                    link = self._path_to_link(image)
+                    image_links.append(link)
 
         if audios:
             for from_audio in audios[0]:
-                link = self._path_to_link(from_audio)
-                from_audio_links.append(link)
+                if from_audio:
+                    link = self._path_to_link(from_audio)
+                    from_audio_links.append(link)
 
             for dest_audio in audios[1]:
-                link = self._path_to_link(dest_audio)
-                dest_audio_links.append(link)
+                if dest_audio:
+                    link = self._path_to_link(dest_audio)
+                    dest_audio_links.append(link)
 
         image_field = " ".join(image_links)
         from_audio_field = " ".join(from_audio_links)
@@ -43,7 +47,6 @@ class AnkiInserter:
 
     def _path_to_link(self, path):
         file_name = self.col.media.addFile(unicode(path, 'utf-8'))
-
         ext = file_name.split(".")[-1].lower()
         if ext == "jpg":
             return '<img src="%s">' % file_name
@@ -56,13 +59,9 @@ class AnkiInserter:
         note_model['did'] = self.deck['id']
         note_model['id'] = self.model['id']
 
-        # showInfo(str(translation))
-
         if len(translation[0]) > 0 and len(translation[1]) > 0:
-
             from_text = translation[0]
-
-            if True: #self.is_no_dublicate(from_text):
+            if self.is_no_dublicate(from_text):
 
                 dest_text = translation[1][0]
                 for i in range(1, len(translation[1])):
@@ -83,7 +82,11 @@ class AnkiInserter:
                 note.fields[3] = dest_examples
                 note.fields[4] = from_audio_field
                 note.fields[5] = dest_audio_field
-                note.fields[6] = images_field
+
+                if self.image_side == "from":
+                    note.fields[6] = images_field
+                else:
+                    note.fields[7] = images_field
 
                 tags = u"{}-{}-import".format(self.from_lang, self.dest_lang)
                 note.tags = self.col.tags.canonify(self.col.tags.split(tags))

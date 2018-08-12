@@ -15,21 +15,33 @@ class TranslationParser:
     def parse(self, vocab):
         self.from_lang_text = ""
         self.dest_lang_text = []
-        v1, v2 = self.vocab_variations(vocab.decode('utf-8'))
 
-        j1 = self.get_json(v1)
-        t1 = self.parse_json(j1)
+        v0 = vocab.decode('utf-8')
+        j0 = self.get_json(v0)
+        t0 = self.parse_json(j0)
 
-        j2 = self.get_json(v2)
-        t2 = self.parse_json(j2)
+        # looking for translations with different capitalization
+        # if the original input brings no results
+        if len(t0) < 1:
+            v1, v2 = self.vocab_variations(v0)
+            t1, t2 = [], []
 
-        if len(t1) > len(t2):
-            self.from_lang_text = v1
-            self.dest_lang_text = t1
+            if v0 is not v1:
+                j1 = self.get_json(v1)
+                t1 = self.parse_json(j1)
+            if v0 is not v2:
+                j2 = self.get_json(v2)
+                t2 = self.parse_json(j2)
+
+            if len(t1) > len(t2):
+                self.from_lang_text = v1
+                self.dest_lang_text = t1
+            else:
+                self.from_lang_text = v2
+                self.dest_lang_text = t2
         else:
-
-            self.from_lang_text = v2
-            self.dest_lang_text = t2
+            self.from_lang_text = v0
+            self.dest_lang_text = t0
 
         translation = [self.from_lang_text, self.dest_lang_text]
         if self.is_valid_translation(translation):

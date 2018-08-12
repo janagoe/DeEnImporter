@@ -39,7 +39,9 @@ def create_model(mm):
     mm.addField(m, fm)
     fm = mm.newField("DestAudio")
     mm.addField(m, fm)
-    fm = mm.newField("Images")
+    fm = mm.newField("FromImages")
+    mm.addField(m, fm)
+    fm = mm.newField("DestImages")
     mm.addField(m, fm)
 
     return m
@@ -51,7 +53,8 @@ def create_templates(mm):
     t1['qfmt'] = """
         <p id="destlang">{{DestLang}}</p>
         <p id="example">{{DestLang Examples}}</p>
-        <p>{{DestAudio}}</p>
+        {{DestImages}}
+        {{DestAudio}}
         """
 
     t1['afmt'] = """
@@ -59,8 +62,8 @@ def create_templates(mm):
         <hr id=answer>
         <p id="fromlang">{{FromLang}}</p>
         <p id="example">{{FromLang Examples}}</p>
-        <p>{{FromAudio}}</p>
-        {{Images}}
+        {{FromImages}}
+        {{FromAudio}}
         """
 
     t2 = mm.newTemplate("Card 2")
@@ -68,8 +71,8 @@ def create_templates(mm):
     t2['qfmt'] = """
         <p id="fromlang">{{FromLang}}</p>
         <p id="example">{{FromLang Examples}}</p>
-        <p>{{FromAudio}}</p>
-        {{Images}}
+        {{FromImages}}
+        {{FromAudio}}
         """
 
     t2['afmt'] = """
@@ -77,7 +80,8 @@ def create_templates(mm):
         <hr id=answer>
         <p id="destlang">{{DestLang}}</p>
         <p id="example">{{DestLang Examples}}</p>
-        <p>{{DestAudio}}</p>
+        {{DestImages}}
+        {{DestAudio}}
         """
 
     return t1, t2
