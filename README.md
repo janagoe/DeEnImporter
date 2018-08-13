@@ -12,15 +12,15 @@ Just Anki 2.0.*
 
 
 ## Supported Languages
-*arabic
-*chinese
-*czech
-*english
-*french
-*german
-*italian
-*japanese
-*polish
-*portuguese
-*russian
-*spanish
+* arabic
+* chinese
+* czech
+* english
+* french
+* german
+* italian
+* japanese
+* polish
+* portuguese
+* russian
+* spanish
