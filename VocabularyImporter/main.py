@@ -2,14 +2,13 @@ from aqt import mw
 from aqt.utils import showInfo
 from aqt.qt import *
 
-from VocabularyImporter.parse.input_parser import InputParser
+from VocabularyImporter.content_handler.input_parser import InputParser
 from VocabularyImporter.anki_inserter import AnkiInserter
-from VocabularyImporter.ui.input_dialog import InputDialog
-from VocabularyImporter.ui.progress_bar import ProgressBar
+from VocabularyImporter.input_dialog import InputDialog
 from VocabularyImporter.get_model import get_model
-from VocabularyImporter.parse.example_parser import SentencesParser
-from VocabularyImporter.parse.translation_parser import TranslationParser
-from VocabularyImporter.media_loader import MediaLoader
+from VocabularyImporter.content_handler.example_parser import SentencesParser
+from VocabularyImporter.content_handler.translation_parser import TranslationParser
+from VocabularyImporter.content_handler.media_loader import MediaLoader
 
 
 ##############################################################################
@@ -24,13 +23,10 @@ def run():
 
     vocabs = InputParser().read_input(text)
 
-    progress_bar = ProgressBar(len(vocabs))
-    # progress_bar.run()
-
     # setup anki collection for insertions
     #################################################
 
-    deck_name = "VocabImporter"
+    deck_name = "Vocabulary Importer"
 
     # select deck
     deck_id = mw.col.decks.id(deck_name, create=True)
@@ -60,8 +56,6 @@ def run():
             images, from_audios, dest_audios = media_loader.load(vocab)
 
             inserter.insert(translation, sentences, images, from_audios, dest_audios)
-
-        progress_bar.finished_action()
 
     # saving and clearing everything up
     inserter.save()

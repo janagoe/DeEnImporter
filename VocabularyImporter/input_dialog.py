@@ -1,6 +1,6 @@
 from aqt.qt import *
-from VocabularyImporter.language_handler import LanguageHandler
-
+from VocabularyImporter.content_handler.language_handler import LanguageHandler
+from vocabimporter import *
 
 class InputDialog(QDialog):
     def __init__(self):
@@ -47,28 +47,28 @@ class InputDialog(QDialog):
         self.translations_spinbox = QSpinBox()
         self.translations_spinbox.setMinimum(1)
         self.translations_spinbox.setMaximum(10)
-        self.translations_spinbox.setValue(5)
+        self.translations_spinbox.setValue(default_translations_number)
 
         self.sentences_label = QLabel("Sentences: ")
         self.sentences_label.setToolTip("There might be no sentences available.")
         self.sentences_spinbox = QSpinBox()
         self.sentences_spinbox.setMinimum(0)
         self.sentences_spinbox.setMaximum(10)
-        self.sentences_spinbox.setValue(2)
+        self.sentences_spinbox.setValue(default_sentences_number)
 
         self.images_label = QLabel("Images: ")
         self.images_label.setToolTip("There might be no images available.\nIf you dont want any images, set the value to 0.")
         self.images_spinbox = QSpinBox()
         self.images_spinbox.setMinimum(0)
         self.images_spinbox.setMaximum(5)
-        self.images_spinbox.setValue(2)
+        self.images_spinbox.setValue(default_images_number)
 
         self.audios_label = QLabel("Audios: ")
         self.audios_label.setToolTip("There might be no audios available.")
         self.audios_spinbox = QSpinBox()
         self.audios_spinbox.setMinimum(0)
         self.audios_spinbox.setMaximum(3)
-        self.audios_spinbox.setValue(1)
+        self.audios_spinbox.setValue(default_audios_number)
 
     def _init_buttons(self):
         self.import_button = QPushButton("Import")
@@ -158,8 +158,8 @@ class InputDialog(QDialog):
         box2.addItems(keys)
 
         # set default choices
-        box1.setCurrentIndex(keys.index(u'german | deutsch'))
-        box2.setCurrentIndex(keys.index(u'english | english'))
+        box1.setCurrentIndex(keys.index(default_from_language))
+        box2.setCurrentIndex(keys.index(default_destination_language))
 
     def _get_langs(self):
 

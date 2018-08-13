@@ -1,8 +1,8 @@
 import urllib2
 import urllib
 import os
-from VocabularyImporter.parse.audio_parser import AudioParser
-from VocabularyImporter.parse.image_parser import ImageParser
+from VocabularyImporter.content_handler.audio_parser import AudioParser
+from VocabularyImporter.content_handler.image_parser import ImageParser
 
 
 class MediaLoader:
