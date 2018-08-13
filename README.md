@@ -10,6 +10,9 @@ Because the program is based on the glosbe.com's API, there might be problems if
 ## Installation Requirements
 Just Anki 2.0.*
 
+## Installation Guide
+Download the repository and copy the VocabularyImporter folder and the vocabimporter.py file into your Anki addons folder. 
+You can find the Anki addons folder by opening Anki. Tools -> Add-ons -> Open Add-ons Folder...
 
 ## Supported Languages
 * arabic
