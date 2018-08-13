@@ -9,24 +9,24 @@ from VocabularyImporter.get_model import get_model
 from VocabularyImporter.content_handler.example_parser import SentencesParser
 from VocabularyImporter.content_handler.translation_parser import TranslationParser
 from VocabularyImporter.content_handler.media_loader import MediaLoader
-
+from vocabimporter import deck_name
 
 ##############################################################################
 
 def run():
+
+    # getting user input
     data = InputDialog().run()
     if not data:
         return
-
-    text, translations_nr, sentences_nr, images_nr, audios_nr,\
-        from_lang, dest_lang, from_audio_wanted, dest_audio_wanted, image_side = data
+    else:
+        text, translations_nr, sentences_nr, images_nr, audios_nr,\
+            from_lang, dest_lang, from_audio_wanted, dest_audio_wanted, image_side = data
 
     vocabs = InputParser().read_input(text)
 
     # setup anki collection for insertions
     #################################################
-
-    deck_name = "Vocabulary Importer"
 
     # select deck
     deck_id = mw.col.decks.id(deck_name, create=True)
@@ -41,9 +41,9 @@ def run():
     mw.col.decks.save(deck)
     mw.col.models.save()
 
+    # parsing downloads and inserting
     #################################################
 
-    # parsing downloads and inserting
     translation_parser = TranslationParser(from_lang, dest_lang, translations_nr)
     example_parser = SentencesParser(from_lang, dest_lang, sentences_nr)
     media_loader = MediaLoader(from_lang, dest_lang, from_audio_wanted, dest_audio_wanted, images_nr, audios_nr)
@@ -58,6 +58,8 @@ def run():
             inserter.insert(translation, sentences, images, from_audios, dest_audios)
 
     # saving and clearing everything up
+    #################################################
+
     inserter.save()
     finish_message(inserter.get_count())
 
