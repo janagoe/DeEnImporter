@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from BeautifulSoup import BeautifulSoup
-from DeEnImporter.download.audio_loader import AudioLoader
 
 
 class AudioParser:
@@ -8,7 +7,7 @@ class AudioParser:
     host_url = "https://glosbe.com"
 
     @classmethod
-    def parse_html(cls, html, vocab, from_audio_wanted, dest_audio_wanted, max_audios):
+    def parse_html(cls, html, from_audio_wanted, dest_audio_wanted):
         """
         Searching in the html data for the audio sources in the from and destination language,
         and letting the AudioLoader load the audios
@@ -20,15 +19,14 @@ class AudioParser:
         :return: paths for the files in the from and destination language
         """
         soup = BeautifulSoup(html)
-        from_srcs, dest_srcs = [], []
+        from_sources, dest_sources = [], []
 
         if from_audio_wanted:
-            from_srcs = cls._from_audio_srcs(soup)
+            from_sources = cls._from_audio_srcs(soup)
         if dest_audio_wanted:
-            dest_srcs = cls._dest_audio_srcs(soup)
+            dest_sources = cls._dest_audio_srcs(soup)
 
-        from_file_names, dest_file_names = AudioLoader.download_audios(vocab, from_srcs, dest_srcs, max_audios)
-        return from_file_names, dest_file_names
+        return from_sources, dest_sources
 
     @classmethod
     def _from_audio_srcs(cls, soup):

@@ -7,7 +7,7 @@ from DeEnImporter.anki_inserter import AnkiInserter
 from DeEnImporter.ui.input_dialog import InputDialog
 from DeEnImporter.ui.progress_bar import ProgressBar
 from DeEnImporter.get_model import get_model
-from DeEnImporter.parse.example_parser import ExampleParser
+from DeEnImporter.parse.example_parser import SentencesParser
 from DeEnImporter.parse.translation_parser import TranslationParser
 from DeEnImporter.download.media_loader import MediaLoader
 
@@ -49,7 +49,7 @@ def run():
 
     # parsing downloads and inserting
     translation_parser = TranslationParser(from_lang, dest_lang, translations_nr)
-    example_parser = ExampleParser(from_lang, dest_lang, sentences_nr)
+    example_parser = SentencesParser(from_lang, dest_lang, sentences_nr)
     media_loader = MediaLoader(from_lang, dest_lang, from_audio_wanted, dest_audio_wanted, images_nr, audios_nr)
     inserter = AnkiInserter(mw.col, model, from_lang, dest_lang, image_side)
 
@@ -57,9 +57,9 @@ def run():
         translation = translation_parser.parse(vocab)
         if translation:
             sentences = example_parser.parse(vocab)
-            images, audios = media_loader.load(vocab)
+            images, from_audios, dest_audios = media_loader.load(vocab)
 
-            inserter.insert(translation, sentences, images, audios)
+            inserter.insert(translation, sentences, images, from_audios, dest_audios)
 
         progress_bar.finished_action()
 

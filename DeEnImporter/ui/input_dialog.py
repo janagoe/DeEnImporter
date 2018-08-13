@@ -151,7 +151,7 @@ class InputDialog(QDialog):
 
     def _add_languages(self, box1, box2):
         self.langs = LanguageHandler.langs_to_dict()
-        keys = sorted(self.langs.keys())
+        keys = sorted(self.langs.keys())  # sorting by alphabet
 
         box1.addItems(keys)
         box2.addItems(keys)

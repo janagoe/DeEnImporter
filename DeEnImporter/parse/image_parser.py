@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from BeautifulSoup import BeautifulSoup
-from DeEnImporter.download.image_loader import ImageLoader
 
 
 class ImageParser:
@@ -8,7 +7,7 @@ class ImageParser:
     host_url = "https://glosbe.com"
 
     @classmethod
-    def parse_html(cls, html, vocab, max_images):
+    def parse_html(cls, html):
         """
         Searching in the html data for the image sources, and letting the ImageLoader load the images.
         :param html: the html data
@@ -16,8 +15,9 @@ class ImageParser:
         :param max_images: the maximal number of images the user wants
         :return: paths of the images
         """
+
         soup = BeautifulSoup(html)
-        image_srcs = []
+        image_sources = []
 
         try:
             div = soup.find('div', {'id': 'translation-images'})
@@ -25,12 +25,11 @@ class ImageParser:
             for img in imgs:
                 html = str(img)
                 src = cls._remove_html(html)
-                image_srcs.append(ImageParser.host_url + src)
+                image_sources.append(ImageParser.host_url + src)
         except AttributeError:
             pass
         finally:
-            image_file_names = ImageLoader.download_images(vocab, image_srcs, max_images)
-            return image_file_names
+            return image_sources
 
 
     @classmethod

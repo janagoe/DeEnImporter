@@ -11,28 +11,28 @@ class AnkiInserter:
         self.image_side = image_side  # "from" or "dest"
         self._counter = 0
 
-    def insert(self, translation, sentences, images, audios):
+    def insert(self, translation, sentences, images, from_audios, dest_audios):
         """
         Inserts the content into an Anki node
         :param translation: translation[0] contains the word from the input in the from language,
          translation[1] contains an array of possible translations in the destination language
         :param sentences: array with arrays of one example sentence in the from language and the fitting
         translated sentence in the destination language
-        :param images: array with paths of the images
-        :param audios: two arrays with the paths from the audio files, audios[0] for the from language and
-        audios[1] for the destination language
+        :param from_audios: paths of the audios in the from language
+        :param dest_audios: paths of the audios in the destination language
         """
 
         if translation:
-            images_field, from_audio_field, dest_audio_field = self._insert_media(images, audios)
+            images_field, from_audio_field, dest_audio_field = self._insert_media(images, from_audios, dest_audios)
             self._insert_note(translation, sentences, images_field, from_audio_field, dest_audio_field)
 
-    def _insert_media(self, images, audios):
+    def _insert_media(self, images, from_audios, dest_audios):
         """
         Creating links from the file paths, which Anki uses to display the images and to play
         the audios
         :param images: paths of the images
-        :param audios: paths of the audios, audios[0] for the from language and audios[1] for the destination language
+        :param from_audios: paths of the audios in the from language
+        :param dest_audios: paths of the audios in the destination language
         :return: strings which will get inserted into the node
         """
 
@@ -46,13 +46,14 @@ class AnkiInserter:
                     link = self._path_to_link(image)
                     image_links.append(link)
 
-        if audios:
-            for from_audio in audios[0]:
+        if from_audios:
+            for from_audio in from_audios:
                 if from_audio:
                     link = self._path_to_link(from_audio)
                     from_audio_links.append(link)
 
-            for dest_audio in audios[1]:
+        if dest_audios:
+            for dest_audio in dest_audios:
                 if dest_audio:
                     link = self._path_to_link(dest_audio)
                     dest_audio_links.append(link)
@@ -143,5 +144,5 @@ class AnkiInserter:
         :param front: the content on the front of the card
         :return: True if the card is no dublicate, False if the card is a dublicate.
         """
-        cards = self.col.findCards(u"FromLanguage:{}".format(front))
+        cards = self.col.findCards(u"FromLang:{}".format(front))
         return len(cards) < 1
