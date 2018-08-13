@@ -2,14 +2,14 @@ from aqt import mw
 from aqt.utils import showInfo
 from aqt.qt import *
 
-from DeEnImporter.parse.input_parser import InputParser
-from DeEnImporter.anki_inserter import AnkiInserter
-from DeEnImporter.ui.input_dialog import InputDialog
-from DeEnImporter.ui.progress_bar import ProgressBar
-from DeEnImporter.get_model import get_model
-from DeEnImporter.parse.example_parser import SentencesParser
-from DeEnImporter.parse.translation_parser import TranslationParser
-from DeEnImporter.download.media_loader import MediaLoader
+from VocabularyImporter.parse.input_parser import InputParser
+from VocabularyImporter.anki_inserter import AnkiInserter
+from VocabularyImporter.ui.input_dialog import InputDialog
+from VocabularyImporter.ui.progress_bar import ProgressBar
+from VocabularyImporter.get_model import get_model
+from VocabularyImporter.parse.example_parser import SentencesParser
+from VocabularyImporter.parse.translation_parser import TranslationParser
+from VocabularyImporter.media_loader import MediaLoader
 
 
 ##############################################################################

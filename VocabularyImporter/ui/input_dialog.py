@@ -1,5 +1,6 @@
 from aqt.qt import *
-from DeEnImporter.language_handler import LanguageHandler
+from VocabularyImporter.language_handler import LanguageHandler
+
 
 class InputDialog(QDialog):
     def __init__(self):

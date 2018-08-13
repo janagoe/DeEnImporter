@@ -9,6 +9,8 @@ class AnkiInserter:
         self.from_lang_code = from_lang_code
         self.dest_lang_code = dest_lang_code
         self.image_side = image_side  # "from" or "dest"
+
+        self.tags = u"{}-{}-import".format(self.from_lang_code, self.dest_lang_code)
         self._counter = 0
 
     def insert(self, translation, sentences, images, from_audios, dest_audios):
@@ -124,8 +126,7 @@ class AnkiInserter:
                 else:
                     note.fields[7] = images_field
 
-                tags = u"{}-{}-import".format(self.from_lang_code, self.dest_lang_code)
-                note.tags = self.col.tags.canonify(self.col.tags.split(tags))
+                note.tags = self.col.tags.canonify(self.col.tags.split(self.tags))
                 note_model['tags'] = note.tags
 
                 self.col.addNote(note)
@@ -144,5 +145,5 @@ class AnkiInserter:
         :param front: the content on the front of the card
         :return: True if the card is no dublicate, False if the card is a dublicate.
         """
-        cards = self.col.findCards(u"FromLang:{}".format(front))
+        cards = self.col.findCards(u"FromLang:{} tag:{}".format(front, self.tags))
         return len(cards) < 1

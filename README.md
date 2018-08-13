@@ -1,4 +1,4 @@
-# DeEnAnkiImporter
+# VocabImporter
 
 You want to import a list of your new German vocabularies? But you dont want to look up the definitions yourself? Then use the DeEnImporter! You dont just get the translations, but also example sentences, pictures, and audio samples if you want. 
 

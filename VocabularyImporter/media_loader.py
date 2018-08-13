@@ -1,8 +1,8 @@
 import urllib2
 import urllib
 import os
-from DeEnImporter.parse.audio_parser import AudioParser
-from DeEnImporter.parse.image_parser import ImageParser
+from VocabularyImporter.parse.audio_parser import AudioParser
+from VocabularyImporter.parse.image_parser import ImageParser
 
 
 class MediaLoader:

@@ -21,5 +21,3 @@ class InputParser:
 
         words.discard('')
         return list(words)
-
-
