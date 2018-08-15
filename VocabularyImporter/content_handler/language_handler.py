@@ -18,6 +18,13 @@ class LanguageHandler:
         [u"ces", u"czech"],
         [u"aao", u"arabic"],
         [u"por", u"portuguese"],
+        [u"swe", u"swedish"],
+        [u"hrv", u"croatian"],
+        [u"fin", u"finnish"],
+        [u"hin", u"hindi"],
+        [u"hun", u"hungarian"],
+        [u"vie", u"vietnamese"],
+        [u"tur", u"turkish"],
     ]
 
     @classmethod

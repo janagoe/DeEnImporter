@@ -23,20 +23,30 @@ class TranslationParser:
         self.from_lang_text = ""
         self.dest_lang_text = []
 
-        v1, v2 = self._vocab_variations(vocab.decode('utf-8'))
+        v0 = vocab.decode('utf-8')
 
-        j1 = self._get_json(v1)
-        t1 = self._parse_json(j1)
+        j0 = self._get_json(v0)
+        t0 = self._parse_json(j0)
 
-        j2 = self._get_json(v2)
-        t2 = self._parse_json(j2)
+        if len(t0) > 0:
+            self.from_lang_text = v0
+            self.dest_lang_text = t0
 
-        if len(t1) > len(t2):
-            self.from_lang_text = v1
-            self.dest_lang_text = t1
         else:
-            self.from_lang_text = v2
-            self.dest_lang_text = t2
+            v1, v2 = self._vocab_variations(v0)
+
+            j1 = self._get_json(v1)
+            t1 = self._parse_json(j1)
+
+            j2 = self._get_json(v2)
+            t2 = self._parse_json(j2)
+
+            if len(t1) > len(t2):
+                self.from_lang_text = v1
+                self.dest_lang_text = t1
+            else:
+                self.from_lang_text = v2
+                self.dest_lang_text = t2
 
         translation = [self.from_lang_text, self.dest_lang_text]
         if self._is_valid_translation(translation):

@@ -49,6 +49,7 @@ def run():
     media_loader = MediaLoader(from_lang, dest_lang, from_audio_wanted, dest_audio_wanted, images_nr, audios_nr)
     inserter = AnkiInserter(mw.col, model, from_lang, dest_lang, image_side)
 
+    not_found = []
     for vocab in vocabs:
         translation = translation_parser.parse(vocab)
         if translation:
@@ -56,26 +57,38 @@ def run():
             images, from_audios, dest_audios = media_loader.load(vocab)
 
             inserter.insert(translation, sentences, images, from_audios, dest_audios)
+        else:
+            not_found.append(vocab)
 
     # saving and clearing everything up
     #################################################
 
     inserter.save()
-    finish_message(inserter.get_count())
+    finish_message(inserter.get_count(), not_found)
 
 
-def finish_message(count):
+def finish_message(count, not_found):
+    message = ""
+
     count *= 2
     if count > 0:
-        showInfo("Successfully created %d new cards." % count)
+        message += "Successfully created %d new cards." % count
     else:
-        showInfo("No cards could be created.")
+        message += "No cards could be created."
+
+    if len(not_found) > 0:
+        message += "\nErrors occurred with:\n"
+
+        for vocab in not_found:
+            message += "  - %s\n" % vocab
+
+    showInfo(message)
 
 
 # setup anki gui
 ##############################################################################
 
-importAction = QAction("Import Input", mw)
+importAction = QAction("Import Vocabulary", mw)
 importAction.triggered.connect(run)
 mw.form.menuTools.addAction(importAction)
 

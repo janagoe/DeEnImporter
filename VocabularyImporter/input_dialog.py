@@ -2,6 +2,7 @@ from aqt.qt import *
 from VocabularyImporter.content_handler.language_handler import LanguageHandler
 from vocabimporter import *
 
+
 class InputDialog(QDialog):
     def __init__(self):
         QDialog.__init__(self)
