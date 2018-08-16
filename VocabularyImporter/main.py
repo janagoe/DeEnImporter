@@ -20,10 +20,10 @@ def run():
     if not data:
         return
     else:
-        text, translations_nr, sentences_nr, images_nr, audios_nr,\
+        text, input_mode, translations_nr, sentences_nr, images_nr, audios_nr,\
             from_lang, dest_lang, from_audio_wanted, dest_audio_wanted, image_side = data
 
-    vocabs = InputParser().read_input(text)
+    vocabs = InputParser().read_input(text, input_mode)
 
     # setup anki collection for insertions
     #################################################
