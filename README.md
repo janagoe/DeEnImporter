@@ -6,24 +6,41 @@ The VocabularyImporter uses the glosbe.com API and website. From the translation
 
 Because the program is based on the glosbe.com's API, there might be problems if you want to add too many vocabs in one day. But if its not way too much it should be fine. 
 
+## Examples
+Finding the tool:
+
+![path to tool](https://github.com/janagoe/VocabularyImporter/blob/master/screenshots/tools.png)
+
+Input dialog
+
+![input dialog](https://github.com/janagoe/VocabularyImporter/blob/master/screenshots/input_dialog.png)
+
+Example card
+
+![example card](https://github.com/janagoe/VocabularyImporter/blob/master/screenshots/example_card.png)
 
 ## Installation Requirements
 Just Anki 2.0.*
 
-## Installation Guide
-Download the repository and copy the VocabularyImporter folder and the vocabimporter.py file into your Anki addons folder. 
-You can find the Anki addons folder by opening Anki. Tools -> Add-ons -> Open Add-ons Folder...
+## Auto Installation
+In Anki go to Tools >> Add-ons >> Browse & Install, and enter the code 2086003188
 
 ## Supported Languages
 * arabic
 * chinese
+* croatian
 * czech
 * english
 * french
 * german
+* hindi
+* hungarian
 * italian
 * japanese
 * polish
 * portuguese
 * russian
 * spanish
+* swedish
+* turkish
+* vietnamese
