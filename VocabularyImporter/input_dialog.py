@@ -26,11 +26,17 @@ class InputDialog(QDialog):
         self.input_box = QPlainTextEdit(self)
 
     def _init_input_mode(self):
-        self.input_radiobutton_single_word = QRadioButton("single words")
-        self.input_radiobutton_phrases_line = QRadioButton("phrases in each line")
+        self.input_radiobutton_single_word = QRadioButton("single word")
+        self.input_radiobutton_phrases_line = QRadioButton("phrase in each line")
 
         self.input_radiobutton_single_word.setChecked(True)
         self.input_radiobutton_phrases_line.setChecked(False)
+
+        self.input_radiobutton_group = QButtonGroup()
+        self.input_radiobutton_group.setExclusive(True)
+
+        self.input_radiobutton_group.addButton(self.input_radiobutton_single_word)
+        self.input_radiobutton_group.addButton(self.input_radiobutton_phrases_line)
 
     def _init_lang_preferences(self):
         self.from_box = QComboBox()
@@ -50,6 +56,12 @@ class InputDialog(QDialog):
 
         self.from_radiobutton.setChecked(True)
         self.dest_radiobutton.setChecked(False)
+
+        self.img_pref_radiobutton_group = QButtonGroup()
+        self.img_pref_radiobutton_group.setExclusive(True)
+
+        self.img_pref_radiobutton_group.addButton(self.from_radiobutton)
+        self.img_pref_radiobutton_group.addButton(self.dest_radiobutton)
 
     def _init_spinboxes(self):
         self.translations_label = QLabel("Translations: ")
@@ -93,9 +105,9 @@ class InputDialog(QDialog):
         self._set_input()
         self._set_lang_preferences()
         self.layout.addWidget(QHLine())
-        self._set_input_mode()
-        self.layout.addWidget(QHLine())
         self._set_image_preferences()
+        self.layout.addWidget(QHLine())
+        self._set_input_mode()
         self.layout.addWidget(QHLine())
         self._set_spinboxes()
         self.layout.addWidget(QHLine())
@@ -110,15 +122,14 @@ class InputDialog(QDialog):
     def _set_input_mode(self):
         self.input_mode_layout = QHBoxLayout()
 
-        self.input_mode_layout.addWidget(QLabel("Use input as..."))
+        self.input_mode_layout.addWidget(QLabel("Use input as: "))
         self.input_mode_layout.addWidget(self.input_radiobutton_single_word)
 
-        self.input_mode_layout.addWidget(QLabel("or as..."))
+        self.input_mode_layout.addWidget(QLabel("or"))
         self.input_mode_layout.addWidget(self.input_radiobutton_phrases_line)
 
-        self.input_mode_layout.addWidget(QLabel("?"))
-
         self.layout.addLayout(self.input_mode_layout)
+        self.layout.setAlignment(self.input_mode_layout, Qt.AlignLeft)
 
     def _set_lang_preferences(self):
         self.from_lang_layout = QHBoxLayout()
@@ -138,13 +149,13 @@ class InputDialog(QDialog):
     def _set_image_preferences(self):
         self.image_pref_layout = QHBoxLayout()
 
-        self.image_pref_layout.addWidget(QLabel("Include images on the"))
+        self.image_pref_layout.addWidget(QLabel("Include images on:"))
         self.image_pref_layout.addWidget(self.from_radiobutton)
-        self.image_pref_layout.addWidget(QLabel("or on the"))
+        self.image_pref_layout.addWidget(QLabel("or"))
         self.image_pref_layout.addWidget(self.dest_radiobutton)
-        self.image_pref_layout.addWidget(QLabel("?"))
 
         self.layout.addLayout(self.image_pref_layout)
+        self.layout.setAlignment(self.image_pref_layout, Qt.AlignLeft)
 
     def _set_spinboxes(self):
         self.spinbox_layout_1 = QHBoxLayout()
