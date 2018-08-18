@@ -3,7 +3,8 @@ import urllib
 import os
 from VocabularyImporter.content_handler.audio_parser import AudioParser
 from VocabularyImporter.content_handler.image_parser import ImageParser
-
+import re
+from time import time
 
 class MediaLoader:
 
@@ -16,6 +17,8 @@ class MediaLoader:
         self.dest_audio_wanted = dest_audio_wanted
         self.max_images = max_images
         self.max_audios = max_audios
+
+        self.non_ascii_regex = re.compile(r'[^\x00-\x7f]', re.UNICODE)
 
     def load(self, vocab):
         """
@@ -50,24 +53,23 @@ class MediaLoader:
         for i in range(len(image_sources)):
             if i >= self.max_images:
                 return image_paths
-            id_str = '%03d' % (i + 1)
+            id_str = '%02d' % (i + 1)
             file_name = self._load_image(vocab, id_str, image_sources[i])
             image_paths.append(file_name)
         return image_paths
 
-    def _download_audios(self, name, sources):
+    def _download_audios(self, name, audio_sources):
         paths = []
-        for i in range(len(sources)):
+        for i in range(len(audio_sources)):
             if i >= self.max_audios:
                 break
-            id_str = '%03d' % (i + 1)
-            file_name = self._load_audio(name, id_str, sources[i])
+            id_str = '%02d' % (i + 1)
+            file_name = self._load_audio(name, id_str, audio_sources[i])
             paths.append(file_name)
 
         return paths
 
-    @classmethod
-    def _load_image(cls, name, id_str, url):
+    def _load_image(self, name, id_str, url):
         """
         Downloading the image.
         :param name: name of the file
@@ -79,14 +81,13 @@ class MediaLoader:
         original_file_name = url.split('/')[-1]
         file_suffix = original_file_name.split('.')[-1]
 
-        if file_suffix in cls.image_file_suffix_list:
-            file_name = "{0}_{1}.{2}".format(cls.image_file_name(name), id_str, file_suffix)
+        if file_suffix in self.image_file_suffix_list:
+            file_name = "{0}_{1}.{2}".format(self.image_file_name(name), id_str, file_suffix)
             with open(file_name, 'wb') as file:
                 file.write(urllib.urlopen(url).read())
             return file_name
 
-    @classmethod
-    def _load_audio(cls, name, id_str, url):
+    def _load_audio(self, name, id_str, url):
         """
         Downloading the audio.
         :param name: name of the file
@@ -99,23 +100,33 @@ class MediaLoader:
         file_suffix = original_file_name.split('.')[-1]
 
         if file_suffix in 'mp3':
-            file_name = "{0}_{1}.{2}".format(cls.audio_file_name(name), id_str, file_suffix)
+            file_name = "{0}_{1}.{2}".format(self.audio_file_name(name), id_str, file_suffix)
             with open(file_name, 'wb') as file:
                 file.write(urllib.urlopen(url).read())
             return file_name
 
-    @classmethod
-    def image_file_name(cls, vocab):
+    def image_file_name(self, vocab):
         """
         :param vocab: the word from the input in the from language
         :return: absolute path from the image file
         """
-        return os.path.join(os.getcwd(), vocab)
+        name = self._unique_name(vocab)
+        return os.path.join(os.getcwd(), name)
 
-    @classmethod
-    def audio_file_name(cls, vocab):
+    def audio_file_name(self, vocab):
         """
         :param vocab: the word from the input in the from language
         :return: absolute path from the audio file
         """
-        return os.path.join(os.getcwd(), vocab)
+        name = self._unique_name(vocab)
+        return os.path.join(os.getcwd(), name)
+
+    def _unique_name(self, vocab):
+        """
+        Creating a unique path name. Removing unicode characters from vocab. Adding a timestamp to it.
+        :param vocab: in unicode
+        :return: string for the path
+        """
+        ascii = re.sub(self.non_ascii_regex, '-', vocab)
+        timestamp = ("%f" % time()).replace('.', '')
+        return "{}_{}".format(ascii, timestamp)
